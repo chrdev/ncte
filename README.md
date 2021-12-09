@@ -1,10 +1,14 @@
-﻿# Neo CD-TEXT Editor (NCTE)
+﻿# Neo CDTEXT Editor (NCTE)
 
-NCTE may be the only publicly available CDTEXT editor that supports MS-JIS (and UTF-16BE)
+NCTE is a CDTEXT editor that supports MS-JIS and UTF-16BE.
+
+中文请见下。
+
+## MIT License
 
 ## Feature List
 
-- Supports Windows 10 and above with High DPI.
+- Supports Windows 10 and Windows 11 with High DPI.
 
 - Supports all CD-TEXT fields except for 89h (2nd TOC, planned feature). Those include
     1.  Title
@@ -36,19 +40,18 @@ NCTE may be the only publicly available CDTEXT editor that supports MS-JIS (and 
 
 ## Burnning a CD
 
-cdrecord.exe -raw96r textfile=file.cdt cuefile=file.cue
+    cdrecord.exe -raw96r textfile=file.cdt cuefile=file.cue
 
+# NCTE CDTEXT 编辑器
 
-Neo CD-TEXT Editor
+NCTE 是录入 CDTEXT 的专用编辑器，支持 MS-JIS 和 UTF-16BE。
 
 ## 录入汉字的建议
 
-## MIT License
+1. 在 Block2 设置语言为 UTF-16BE， 75h Chinese。 然后录入完整信息。
 
-Copyright 2021 chrdev
+2. 在 Block2 点右键选择复制，在 Block1 点右键选择粘贴。然后设置语言为 MS-JIS， 75h Chinese。
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+3. 保存。
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+这样可保持最大兼容商用播放机，并且完全正确的保存汉字信息。UTF-16BE 区块能被电脑软件和定制 CD 播放机读取。
