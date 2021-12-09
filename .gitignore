@@ -1,0 +1,8 @@
+/x64/
+/Release/
+/Debug/
+/ncte-release/
+.vs/
+*.vcxproj.user
+*.cmd
+*.7z

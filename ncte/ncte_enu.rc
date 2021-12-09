@@ -1,0 +1,220 @@
+#include "resdefs.h"
+
+#include <winres.h>
+
+#pragma code_page(1252)
+
+
+kDlgToolbar DIALOGEX 0, 0, 481, kRcToolbarH
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+EXSTYLE  WS_EX_NOPARENTNOTIFY | WS_EX_CONTROLPARENT
+FONT 9, "Tahoma", 400, 0, 0x1
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+PUSHBUTTON      "N", kIdNew, kRcToolMargin, kRcToolMargin, kRcIconButtonW, kRcIconButtonH
+PUSHBUTTON      "O", kIdOpen, kRcToolMargin + kRcIconButtonW, kRcToolMargin, kRcIconButtonW, kRcIconButtonH
+PUSHBUTTON      "S", kIdSave, kRcToolMargin + kRcIconButtonW + kRcIconButtonW, kRcToolMargin, kRcIconButtonW, kRcIconButtonH
+LTEXT           "", kIdSep1, kRcToolbarFileW, 4, 4, 14, SS_ETCHEDVERT | SS_NOPREFIX
+
+// group starting x not important, because we position the group by code
+LTEXT           "Tracks:", kIdTrackLabel, 65, kRcTLabelY, 28, kRcTextH
+LTEXT           "(99)", kIdTrackCount, 65+28, kRcTLabelY, 20, kRcTextH
+
+// group starting x not important, because we position the group by code
+EDITTEXT        kIdTrackFirst, 148, kRcTEditY, kRcTrackEditW, kRcEditH, ES_NUMBER
+CONTROL         "", kIdTrackFirstSpin, "msctls_updown32", UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS, 148 + kRcTrackEditW, kRcTEditY, kRcSpinW, kRcSpinH
+LTEXT           "-", kIdTrackHyphen, 180, kRcTLabelY, 4, 8, SS_NOPREFIX | SS_SIMPLE
+EDITTEXT        kIdTrackLast, 185, kRcTEditY, kRcTrackEditW, kRcEditH, ES_NUMBER
+CONTROL         "", kIdTrackLastSpin, "msctls_updown32", UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS, 185 + kRcTrackEditW, kRcTEditY, kRcSpinW, kRcSpinH
+
+// group starting x not important, because we position the group by code
+PUSHBUTTON      "AE", kIdAlbumFields, 268, kRcToolMargin, kRcIconButtonW + kRcIconButtonW, kRcIconButtonH
+PUSHBUTTON      "TE", kIdTrackFields, 268 + kRcToolMargin + kRcIconButtonW + kRcIconButtonW, kRcToolMargin, kRcIconButtonW + kRcIconButtonW, kRcIconButtonH
+END
+
+kDlgAlbum DIALOGEX 0, 0, kRcPanelW, kRcAlbumH
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_NOPARENTNOTIFY | WS_EX_CONTROLPARENT
+FONT 10, "Tahoma", 400, 0, 0x1
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+CONTROL         "U", kIdCopyProtection, "Button", BS_CHECKBOX | WS_TABSTOP | WS_GROUP, kEnuEditX, kRcLine0Y, kRcEditH + kRcToolMargin + kRcToolMargin, kRcEditH
+LTEXT           "&Language:", kIdLanguageLabel, kRcMargin, kRcLine0Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+COMBOBOX        kIdEncoding, kEnuEditX + kRcEditH + kRcSpacingW + kRcToolMargin + kRcToolMargin, kRcLine0Y, kEnuCombo0W - kRcEditH - kRcSpacingW - kRcToolMargin - kRcToolMargin, kRcComboH, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+COMBOBOX        kIdLanguage, kEnuEditX + kEnuCombo0W + kRcSpacingW, kRcLine0Y, kEnuEditX + kRcEditW - kEnuEditX - kEnuCombo0W - kRcSpacingW, kRcComboH, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+LTEXT           "&Genre:",kIdGenreLabel, kRcMargin, kRcLine1Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+COMBOBOX        kIdGenre, kEnuEditX, kRcLine1Y, kEnuCombo0W, kRcComboH, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+EDITTEXT        kIdGenreExtra, kEnuEditX + kEnuCombo0W + kRcSpacingW, kRcLine1Y, kEnuEditX + kRcEditW - kEnuEditX - kEnuCombo0W - kRcSpacingW, kRcEditH,ES_AUTOHSCROLL
+
+LTEXT           "&Titile:",kIdTitleLabel, kRcMargin, kRcLine2Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdTitle, kEnuEditX, kRcLine2Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "&Artist:",kIdArtistLabel, kRcMargin, kRcLine3Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdArtist, kEnuEditX, kRcLine3Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "&Songwriter:",kIdSongwriterLabel, kRcMargin, kRcLine4Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdSongwriter, kEnuEditX, kRcLine4Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "&Composer:",kIdComposerLabel, kRcMargin, kRcLine5Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdComposer, kEnuEditX, kRcLine5Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "A&rranger:",kIdArrangerLabel, kRcMargin, kRcLine6Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdArranger, kEnuEditX, kRcLine6Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "Catalog &Number:",kIdCatalogLabel, kRcMargin, kRcLine7Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdCatalog, kEnuEditX, kRcLine7Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "&UPC/EAN Code:",kIdCodeLabel, kRcMargin, kRcLine8Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdCode, kEnuEditX, kRcLine8Y, kRcEditW, kRcEditH,ES_AUTOHSCROLL
+LTEXT           "&Message:", kIdMessageLabel, kRcMargin, kRcLine9Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdMessage, kEnuEditX, kRcLine9Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Closed &Information:",kIdClosedInfoLabel, kRcMargin, kRcLine10Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdClosedInfo, kEnuEditX, kRcLine10Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "T&otal Playing Time:", kIdTocLabel, kRcMargin, kRcLine11Y + kRcTextOffsetY, kEnuEditX - kRcMargin, kRcTextH
+EDITTEXT        kIdToc, kEnuEditX, kRcLine11Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+END
+
+kDlgTrack DIALOGEX 0, 0, kRcPanelW, kRcTrackH
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_NOPARENTNOTIFY | WS_EX_CONTROLPARENT
+FONT 10, "Tahoma", 400, 0, 0x1
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+LTEXT           "12", kIdTrackNumber, kRcMargin, kRcMargin, kRcTLabelX, kRcTLabelX, NOT WS_GROUP | SS_OWNERDRAW
+LTEXT           "Titile:", kIdTitleLabel, kRcTLabelX, kRcLine0Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdTitle, kEnuEditX, kRcLine0Y ,kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Artist:", kIdArtistLabel, kRcTLabelX, kRcLine1Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdArtist, kEnuEditX, kRcLine1Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Songwriter:", kIdSongwriterLabel, kRcTLabelX, kRcLine2Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdSongwriter, kEnuEditX, kRcLine2Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Composer:", kIdComposerLabel, kRcTLabelX, kRcLine3Y + kRcTextOffsetY ,kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdComposer, kEnuEditX, kRcLine3Y,kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Arranger:", kIdArrangerLabel, kRcTLabelX, kRcLine4Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdArranger, kEnuEditX, kRcLine4Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "ISRC:", kIdCodeLabel, kRcTLabelX, kRcLine5Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdCode, kEnuEditX, kRcLine5Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Message:", kIdMessageLabel, kRcTLabelX, kRcLine6Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdMessage, kEnuEditX, kRcLine6Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+LTEXT           "Start Time:", kIdTocLabel, kRcTLabelX, kRcLine7Y + kRcTextOffsetY, kEnuEditX - kRcTLabelX, kRcTextH
+EDITTEXT        kIdToc, kEnuEditX, kRcLine7Y, kRcEditW, kRcEditH, ES_AUTOHSCROLL
+END
+
+kDlgOpenPanel DIALOGEX 0, 0, 200, 24
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
+CAPTION ""
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+FONT 8, "Tahoma"
+BEGIN
+CONTROL         "Save Dump", kIdSaveDump, "Button", BS_AUTOCHECKBOX | BS_LEFTTEXT | WS_TABSTOP, 0, 2, 50, 10
+PUSHBUTTON      "Extract",  kIdExtract, 75, 0, 57, 14
+END
+
+
+kMenuNavPopup MENU
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+	POPUP ""
+	BEGIN
+	MENUITEM "&Copy", kEditCopy
+	MENUITEM "&Paste", kEditPaste
+	POPUP "Copy &As"
+	BEGIN
+		MENUITEM "EAC", kCopyAsEac
+		MENUITEM "Test", kCopyAsTest
+	END
+	MENUITEM SEPARATOR
+	MENUITEM "Move &Up", kShiftUp
+	MENUITEM "Move &Down", kShiftDown
+	MENUITEM SEPARATOR
+	MENUITEM "De&lete", kEditDelete
+	END
+END
+
+
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+BEGIN
+kTextMainWndTitle   "Neo CDTEXT Editor (Pre-alpha)"
+kTextAbout          "Neo CDTEXT Editor (Pre-alpha)\r\nMIT License"
+
+kTextTrackCount     "(%d)"
+kTextFieldsSelectorHelp "Ctrl-Click to select single\r\nShift-Click to select filled"
+kTextCopyProtection "Check to mark Copy-Protected"
+
+kTextTitle           "Title"
+kTextArtist          "Artist"
+kTextSongwriter      "Songwriter"
+kTextComposer        "Composer"
+kTextArranger        "Arranger"
+kTextCatalog         "Catalog Number"
+kTextUpcEan          "UPC/EAN"
+kTextIsrc            "ISRC"
+kTextMessage         "Message"
+kTextClosedInfo      "Closed Information"
+kTextToc             "TOC"
+
+kTextAlbumFieldsSelectorWidth "150"
+kTextTrackFieldsSelectorWidth "110"
+
+kTextPromptDelete         "Sure to DELETE block content?"
+kTextPromptAbandonUnsaved "Unsaved input will be lost!\nAre you sure?"
+kTextCdNoText             "No CD-TEXT."
+kTextCdNoCd               "No CD in drive."
+kTextCdOtherError         "CD operation failed. You may try again."
+
+kTextFileSaveError        "Failed saving file."
+kTextFileOpenError        "Failed opening file."
+
+kText8859              "8859-1"
+kTextAscii             "ASCII"
+kTextMsjis             "MS-JIS"
+kTextUtf16be           "UTF-16BE"
+
+kTextNotUsed           "%02hXh Not Used"
+kTextNotDefined        "%02hXh Not Defined"
+
+kTextEnglish           "%02hXh English"
+kTextGerman            "%02hXh German"
+kTextFrench            "%02hXh French"
+kTextSpanish           "%02hXh Spanish"
+kTextItalian           "%02hXh Italian"
+kTextJapanese          "%02hXh Japanese"
+kTextKorean            "%02hXh Korean"
+kTextChinese           "%02hXh Chinese"
+kTextPortuguese        "%02hXh Portuguese"
+kTextDutch             "%02hXh Dutch"
+kTextDanish            "%02hXh Danish"
+kTextSwedish           "%02hXh Swedish"
+kTextNorwegian         "%02hXh Norwegian"
+kTextFinnish           "%02hXh Finnish"
+kTextPolish            "%02hXh Polish"
+kTextRussian           "%02hXh Russian"
+kTextSlovenian         "%02hXh Slovenian"
+kTextHungarian         "%02hXh Hungarian"
+kTextCzech             "%02hXh Czech"
+kTextGreek             "%02hXh Greek"
+kTextTurkish           "%02hXh Turkish"
+
+kTextAdultContemporary     "%02hXh Adult Contemporary"
+kTextAlternativeRock       "%02hXh Alternative Rock"
+kTextChildrensMusic        "%02hXh Childrens Music"
+kTextClassical             "%02hXh Classical"
+kTextContemporaryChristian "%02hXh Contemporary Christian"
+kTextCountry               "%02hXh Country"
+kTextDance                 "%02hXh Dance"
+kTextEasyListening         "%02hXh Easy Listening"
+kTextErotic                "%02hXh Erotic"
+kTextFolk                  "%02hXh Folk"
+kTextGospel                "%02hXh Gospel"
+kTextHipHop                "%02hXh Hip Hop"
+kTextJazz                  "%02hXh Jazz"
+kTextLatin                 "%02hXh Latin"
+kTextMusical               "%02hXh Musical"
+kTextNewAge                "%02hXh New Age"
+kTextOpera                 "%02hXh Opera"
+kTextOperetta              "%02hXh Operetta"
+kTextPopMusic              "%02hXh Pop Music"
+kTextRap                   "%02hXh Rap"
+kTextReggae                "%02hXh Reggae"
+kTextRockMusic             "%02hXh Rock Music"
+kTextRhythmAndBlues        "%02hXh Rhythm & Blues"
+kTextSoundEffects          "%02hXh Sound Effects"
+kTextSoundTrack            "%02hXh Sound Track"
+kTextSpokenWord            "%02hXh Spoken Word"
+kTextWorldMusic            "%02hXh World Music"
+
+END

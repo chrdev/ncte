@@ -1,0 +1,5 @@
+#include "resdefs.h"
+
+#pragma code_page(1252)
+
+kRcIconFont kRtFont ncteicons.ttf

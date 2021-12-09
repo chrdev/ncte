@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<glyph name="E" format="2">
+  <advance width="2048.480572014011"/>
+  <unicode hex="0045"/>
+  <outline>
+    <contour>
+      <point x="1395.8559150022606" y="1020.9588536737988" type="line"/>
+      <point x="2036.8559150022606" y="1016.9588536737988" type="line"/>
+      <point x="1738.8559150022606" y="389.9588536737988" type="line"/>
+    </contour>
+  </outline>
+</glyph>
