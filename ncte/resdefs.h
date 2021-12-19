@@ -92,8 +92,8 @@
 #define kShiftDown          205
 #define kEditDelete         206
 						   
-#define kCopyAsEac          207
-#define kCopyAsTest         208
+#define kCopyAsCue          207
+#define kCopyAsEac          208
 
 #define kIdStatic (-1)
 

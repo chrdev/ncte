@@ -8,7 +8,7 @@
 #include "dpi.h"
 
 static inline void
-albumFieldsSelector_popup(HWND parent, int x, int y, uint8_t fields) {
+albumFieldsSelector_popup(HWND parent, int x, int y) {
 	const ResStr items[] = {
 		resstr_load(kTextSongwriter),
 		resstr_load(kTextComposer),
@@ -24,10 +24,6 @@ albumFieldsSelector_popup(HWND parent, int x, int y, uint8_t fields) {
 		.x = x,
 		.y = y,
 		.cx = dpi_scale(resstr_loadNumber(kTextAlbumFieldsSelectorWidth)),
-		.fields = fields,
-		.getFieldsFunc = cdt_getAlbumFields,
-		.getHiddenFieldsFunc = cdt_getAlbumHiddenFields,
-		.notifyHideFieldsExtra = fields_kAlbum,
 		.itemCount = ARRAYSIZE(items),
 		.items = items,
 		.msgId = fields_kAlbum,
@@ -36,7 +32,7 @@ albumFieldsSelector_popup(HWND parent, int x, int y, uint8_t fields) {
 }
 
 static inline void
-trackFieldsSelector_popup(HWND parent, int x, int y, uint8_t fields) {
+trackFieldsSelector_popup(HWND parent, int x, int y) {
 	const ResStr items[] = {
 		resstr_load(kTextTitle),
 		resstr_load(kTextArtist),
@@ -52,10 +48,6 @@ trackFieldsSelector_popup(HWND parent, int x, int y, uint8_t fields) {
 		.x = x,
 		.y = y,
 		.cx = dpi_scale(resstr_loadNumber(kTextTrackFieldsSelectorWidth)),
-		.fields = fields,
-		.getFieldsFunc = cdt_getTrackFields,
-		.getHiddenFieldsFunc = cdt_getTrackHiddenFields,
-		.notifyHideFieldsExtra = fields_kTrack,
 		.itemCount = ARRAYSIZE(items),
 		.items = items,
 		.msgId = fields_kTrack,

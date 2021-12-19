@@ -1,8 +1,11 @@
-/x64/
-/Release/
-/Debug/
+/memo.txt
 /ncte-release/
+/*.cmd
+/*.7z
+
+x64/
+Release/
+Debug/
 .vs/
+
 *.vcxproj.user
-*.cmd
-*.7z

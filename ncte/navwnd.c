@@ -511,8 +511,11 @@ onContextMenu(HWND wnd, HWND ctxWnd, UINT x, UINT y) {
 	case kEditDelete:
 		handleDelete(wd);
 		break;
+	case kCopyAsCue:
+		msg_sendCopy(GetParent(wnd), format_kCue, wd->selection);
+		break;
 	case kCopyAsEac:
-		msg_sendCopy(GetParent(wnd), format_kEac);
+		msg_sendCopy(GetParent(wnd), format_kEac, wd->selection);
 		break;
 	}
 }

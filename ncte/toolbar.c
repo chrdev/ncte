@@ -16,6 +16,7 @@
 #include "sys.h"
 #include "debug.h"
 #include "color.h"
+#include "bit.h"
 
 
 // USERDATA usage
@@ -165,18 +166,16 @@ static inline void
 showAlbumFieldsSelector(HWND parent) {
 	RECT rc;
 	GetWindowRect(GetDlgItem(parent, kIdAlbumFields), &rc);
-	BYTE fields = msg_sendGetFields(GetParent(parent), fields_kAlbum);
 	int x = sys_isDropdownMenuRtl() ? rc.right : rc.left;
-	albumFieldsSelector_popup(parent, x, rc.bottom, fields);
+	albumFieldsSelector_popup(parent, x, rc.bottom);
 }
 
 static inline void
 showTrackFieldsSelector(HWND parent) {
 	RECT rc;
 	GetWindowRect(GetDlgItem(parent, kIdTrackFields), &rc);
-	BYTE fields = msg_sendGetFields(GetParent(parent), fields_kTrack);
 	int x = sys_isDropdownMenuRtl() ? rc.right : rc.left;
-	trackFieldsSelector_popup(parent, x, rc.bottom, fields);
+	trackFieldsSelector_popup(parent, x, rc.bottom);
 }
 
 static inline void
@@ -301,29 +300,73 @@ onDpiChangedAfterParent(HWND wnd) {
 	setIconFont(wnd);
 }
 
+static inline BYTE
+getFilledFields(HWND wnd, int fieldsClass) {
+	switch (fieldsClass) {
+	case fields_kAlbum: return cdt_getAlbumFields(&theCdt);
+	case fields_kTrack: return cdt_getTrackFields(&theCdt);
+	}
+	assert(false);
+	return 0;
+}
+
 static inline void
-onSetFields(HWND wnd, WPARAM wp, LPARAM lp) {
-	bool result = SendMessage(GetParent(wnd), MSG_SETFIELDS, wp, lp);
+onGetFilledFields(HWND wnd, int fieldsClass) {
+	dlg_setResult(wnd, getFilledFields(wnd, fieldsClass));
+}
+
+static inline void
+updateAlbumFieldsButton(HWND wnd, BYTE hidden) {
+	wchar_t text[] = {
+		hidden ? L'a' : L'A',
+		L'E',
+		L'\0'
+	};
+	SetWindowText(GetDlgItem(wnd, kIdAlbumFields), text);
+};
+
+static inline void
+updateTrackFieldsButton(HWND wnd, BYTE hidden) {
+	wchar_t text[] = {
+		hidden ? L't' : L'T',
+		L'E',
+		L'\0'
+	};
+	SetWindowText(GetDlgItem(wnd, kIdTrackFields), text);
+}
+
+static inline void
+updateFieldsButtons(HWND wnd, int fieldsClass, BYTE fields) {
+	BYTE filled = getFilledFields(wnd, fieldsClass);
+	BYTE hidden = bit_getHidden8(fields, filled);
+	switch (fieldsClass) {
+	case fields_kAlbum:
+		updateAlbumFieldsButton(wnd, hidden);
+		fields = msg_sendGetFields(wnd, fields_kTrack);
+		filled = getFilledFields(wnd, fields_kTrack);
+		hidden = bit_getHidden8(fields, filled);
+		updateTrackFieldsButton(wnd, hidden);
+		break;
+	case fields_kTrack:
+		updateTrackFieldsButton(wnd, hidden);
+		fields = msg_sendGetFields(wnd, fields_kAlbum);
+		filled = getFilledFields(wnd, fields_kAlbum);
+		hidden = bit_getHidden8(fields, filled);
+		updateAlbumFieldsButton(wnd, hidden);
+		break;
+	}
+}
+
+static inline void
+onSetFields(HWND wnd, int fieldsClass, BYTE fields) {
+	bool result = msg_sendSetFields(GetParent(wnd), fieldsClass, fields);
+	if (result) updateFieldsButtons(wnd, fieldsClass, fields);
 	dlg_setResult(wnd, result);
 }
 
 static inline void
-onHideFields(HWND wnd, int type, BYTE hidden) {
-	int id;
-	wchar_t text[3] = { L'A', L'E', L'\0' };
-	switch (type) {
-	case fields_kAlbum:
-		id = kIdAlbumFields;
-		text[0] = hidden ? L'a' : L'A';
-		break;
-	case fields_kTrack:
-		id = kIdTrackFields;
-		text[0] = hidden ? L't' : L'T';
-		break;
-	}
-
-	HWND ctl = GetDlgItem(wnd, id);
-	SetWindowText(ctl, text);
+onGetFields(HWND wnd, int fieldsClass) {
+	dlg_setResult(wnd, msg_sendGetFields(GetParent(wnd), fieldsClass));
 }
 
 static INT_PTR CALLBACK
@@ -342,7 +385,13 @@ dlgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		onSetTrackRange(wnd, LOBYTE(wParam), HIBYTE(wParam));
 		return TRUE;
 	case MSG_SETFIELDS:
-		onSetFields(wnd, wParam, lParam);
+		onSetFields(wnd, (int)wParam, (BYTE)lParam);
+		return TRUE;
+	case MSG_GETFIELDS:
+		onGetFields(wnd, (int)wParam);
+		return TRUE;
+	case MSG_GETFILLEDFIELDS:
+		onGetFilledFields(wnd, (int)wParam);
 		return TRUE;
 	case MSG_COMPLETENESSCHANGED:
 		onCompletenessChanged(wnd, (bool)wParam);
@@ -355,9 +404,6 @@ dlgProc(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		return TRUE;
 	case WM_DPICHANGED_AFTERPARENT:
 		onDpiChangedAfterParent(wnd);
-		return TRUE;
-	case MSG_HIDEFIELDS:
-		onHideFields(wnd, (int)wParam, (BYTE)lParam);
 		return TRUE;
 	}
 	return FALSE;

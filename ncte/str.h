@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <string.h> // strncmp
 #include <stdbool.h>
+#include <assert.h>
 
 #include "mem.h"
 
@@ -14,6 +15,14 @@ typedef struct ResStr{
 	const wchar_t* p;
 	int c;
 }ResStr;
+
+ResStr
+resstr_load(WORD id);
+
+// Return converted positive number or 0
+int
+resstr_loadNumber(WORD id);
+
 
 const wchar_t* _cdecl
 wcs_format(const wchar_t* format, ...);
@@ -30,13 +39,6 @@ wcs_loadf(int* len, WORD id, ...);
 // len can be NULL if not needed
 const wchar_t*
 wcs_load(int* len, WORD id);
-
-ResStr
-resstr_load(WORD id);
-
-// Return converted positive number or 0
-int
-resstr_loadNumber(WORD id);
 
 // Because we are dealing whih short lists, a dumb comparison will do
 static inline int
@@ -197,3 +199,33 @@ wcs_copy(HANDLE heap, wchar_t** dst, const wchar_t* src) {
 	CopyMemory(*dst, src, cb);
 	return true;
 }
+
+
+static inline size_t
+wcsbuffer_getCchIndex_(const wchar_t* buffer) {
+	return HeapSize(GetProcessHeap(), 0, buffer) / sizeof(wchar_t) - 1;
+}
+
+// wcsbuffer is always NUL-terminated and can be freed with HeapFree().
+// max capacity is limited to wchar_t (uint16_t)
+// cch is the initial capacity, not including terminating NUL.
+static inline wchar_t*
+wcsbuffer_init(wchar_t cch) {
+	size_t size = sizeof(wchar_t) * (cch + 2);
+	wchar_t* p = HeapAlloc(GetProcessHeap(), 0, size);
+	if (!p) return NULL;
+	p[0] = L'\0';
+	p[wcsbuffer_getCchIndex_(p)] = 0;
+	return p;
+}
+
+static inline wchar_t
+wcsbuffer_getCch(const wchar_t* buffer) {
+	return buffer[wcsbuffer_getCchIndex_(buffer)];
+}
+
+// If succeeded, return buffer. If failed, return NULL, but buffer is still intact.
+// Text can be NULL, this function returns buffer immediately.
+// If len is negative, this function calculates the text length.
+bool
+wcsbuffer_append(wchar_t** buffer, const wchar_t* text, int len);

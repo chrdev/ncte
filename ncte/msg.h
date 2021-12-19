@@ -40,19 +40,19 @@ enum {
 	// lParam: depends on wParam, none except commented, see command_k*
 
 	MSG_SETFIELDS,
-	// wParam: enum field_k*, type album or track
+	// wParam: enum Fields, fields_kAlbum or fields_kTrack
 	// lParam: BYTE fields, 
 	// return: bool, whether the fields actually changed.
 
 	MSG_GETFIELDS,
-	// wParam: enum field_k*, type album or track
+	// wParam: enum Fields, fields_kAlbum or fields_kTrack
 	// lParam: not used
 	// return: BYTE, result
 
-	MSG_HIDEFIELDS,
-	// wParam: enum field_k*, type album or track
-	// lparam: BYTE fields,
-	// return: none / ignored
+	MSG_GETFILLEDFIELDS,
+	// wParam: enum Fields, fields_kAlbum or fields_kTrack
+	// lParam: not used
+	// return: BYTE, result
 
 	MSG_SETTRACKRANGE,
 	// wParam: MAKEWORD(trackFirst, trackLast)
@@ -162,40 +162,42 @@ msg_sendCommand(HWND wnd, int cmd, LPARAM lp) {
 	SendMessage(wnd, MSG_COMMAND, cmd, lp);
 }
 
+
 // bool onSetFields(HWND wnd, int type, BYTE fields)
+
 #define MSG_HANDLE_SETFIELDS(wnd, fn) \
 	case MSG_SETFIELDS: return (fn)((wnd), (int)wParam, (BYTE)lParam)
+
 #define MSG_FORWARD_SETFIELDS(wnd) \
 	case MSG_SETFIELDS: return SendMessage((wnd), msg, wParam, lParam)
+
 static inline bool
-msg_sendSetFields(HWND wnd, int type, BYTE fields) {
-	return SendMessage(wnd, MSG_SETFIELDS, (WPARAM)type, (LPARAM)fields);
+msg_sendSetFields(HWND wnd, int fieldsClass, BYTE fields) {
+	return SendMessage(wnd, MSG_SETFIELDS, (WPARAM)fieldsClass, (LPARAM)fields);
 }
 
 
-// void onHideFields(HWND wnd, int type, BYTE hiddenFields)
+// BYTE onGetFields(HWND wnd, int fieldsClass)
 
-#define MSG_HANDLE_HIDEFIELDS(wnd, fn) \
-	case MSG_HIDEFIELDS: return (fn)((wnd), (int)wParam, (BYTE)lParam), 0
-
-#define MSG_FORWARD_HIDEFIELDS(wnd) \
-	case MSG_HIDEFIELDS: return SendMesasge((wnd), msg, wParam, lParam)
-
-static inline void
-msg_sendHideFields(HWND wnd, int type, BYTE hiddenFields) {
-	SendMessage(wnd, MSG_HIDEFIELDS, (WPARAM)type, (LPARAM)hiddenFields);
-}
-
-
-// BYTE onGetFields(HWND wnd, int type)
 #define MSG_HANDLE_GETFIELDS(wnd, fn) \
 	case MSG_GETFIELDS: return (fn)((wnd), (int)wParam)
+
 #define MSG_FORWARD_GETFIELDS(wnd) \
 	case MSG_GETFIELDS: return SendMessage((wnd), MSG_GETFIELDS, wParam, lParam)
+
 static inline BYTE
-msg_sendGetFields(HWND wnd, int type) {
-	return (BYTE)SendMessage(wnd, MSG_GETFIELDS, (WPARAM)type, 0);
+msg_sendGetFields(HWND wnd, int fieldsClass) {
+	return (BYTE)SendMessage(wnd, MSG_GETFIELDS, (WPARAM)fieldsClass, 0);
 }
+
+
+// BYTE onGetFilledFields(HWND wnd, int fieldsClass)
+
+static inline BYTE
+msg_sendGetFilledFields(HWND wnd, int fieldsClass) {
+	return (BYTE)SendMessage(wnd, MSG_GETFILLEDFIELDS, (WPARAM)fieldsClass, 0);
+}
+
 
 // void onSetTrackRange(int first, int last)
 #define MSG_THREAD_HANDLE_SETTRACKRANGE(fn) \
@@ -285,12 +287,12 @@ msg_postLayoutChanged(HWND wnd, WORD srcId) {
 	PostMessage(wnd, MSG_LAYOUTCHANGED, (WPARAM)srcId, 0);
 }
 
-// void onCopy(HWND wnd, int format)
+// void onCopy(HWND wnd, int format, int blockIndex)
 #define MSG_HANDLE_COPY(wnd, fn) \
-	case MSG_COPY: return (fn)((wnd), (int)wParam), 0
+	case MSG_COPY: return (fn)((wnd), (int)wParam, (int)lParam), 0
 static inline void
-msg_sendCopy(HWND wnd, int format) {
-	SendMessage(wnd, MSG_COPY, (WPARAM)format, 0);
+msg_sendCopy(HWND wnd, int format, int blockIndex) {
+	SendMessage(wnd, MSG_COPY, (WPARAM)format, (LPARAM)blockIndex);
 }
 
 // void onShowRect(HWND wnd, HWND child)

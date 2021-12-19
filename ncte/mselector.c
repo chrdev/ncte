@@ -33,14 +33,11 @@ typedef struct WndData {
 	int hot;
 	int itemCx;
 	int itemCy;
+	const ResStr* items;
 
 	int msgId;
-	const ResStr* items;
 	BYTE fields;
 	BYTE hiddenFields;
-	cdt_getFieldsFunc getFields;
-	cdt_getHiddenFieldsFunc getHiddenFields;
-	int notifyHideFieldsExtra;
 
 	bool wasMouseOnMe;
 	bool done;
@@ -265,11 +262,17 @@ getFields(const WndData* wd, int item) {
 		return 1 << item;
 	}
 	else if (kbd_isShiftDown()) {
-		return wd->getFields(&theCdt);
+		return msg_sendGetFilledFields(wd->parent, wd->msgId);
 	}
 	else {
 		return bit_flip8(wd->fields, item);
 	}
+}
+
+static inline void
+updateHiddenFields(WndData* wd) {
+	BYTE filled = msg_sendGetFilledFields(wd->parent, wd->msgId);
+	wd->hiddenFields = bit_getHidden8(wd->fields, filled);
 }
 
 static inline void
@@ -282,17 +285,15 @@ onLRButtonUp(HWND wnd, int x, int y, UINT flags) {
 	}
 
 	BYTE fields = getFields(wd, item);
-	if (!msg_sendSetFields(GetParent(wnd), wd->msgId, fields)) return;
+	if (!msg_sendSetFields(wd->parent, wd->msgId, fields)) return;
 
 	wd->fields = fields;
-	wd->hiddenFields = wd->getHiddenFields(&theCdt, fields);
+	updateHiddenFields(wd);
 
 	//RECT rc;
 	//getItemRect(wd, item, &rc);
 	//InvalidateRect(wnd, &rc, FALSE);
 	InvalidateRect(wnd, NULL, TRUE);
-
-	msg_sendHideFields(wd->parent, wd->notifyHideFieldsExtra, wd->hiddenFields);
 }
 
 static inline void
@@ -421,14 +422,11 @@ mselector_popup(HWND parent, const MSelectorParams* params) {
 	wd->parent = parent;
 	wd->itemCount = params->itemCount;
 	wd->items = params->items;
-	wd->fields = params->fields;
-	wd->getFields = params->getFieldsFunc;
-	wd->getHiddenFields = params->getHiddenFieldsFunc;
-	wd->notifyHideFieldsExtra = params->notifyHideFieldsExtra;
-	wd->hiddenFields = wd->getHiddenFields(&theCdt, wd->fields);
+	wd->msgId = params->msgId;
+	wd->fields = msg_sendGetFields(wd->parent, wd->msgId);
+	updateHiddenFields(wd);
 	wd->itemCx = params->cx;
 	wd->itemCy = sys_getMenuItemCy();
-	wd->msgId = params->msgId;
 
 	DWORD style = WS_POPUP | WS_BORDER;
 	DWORD exStyle = WS_EX_PALETTEWINDOW | WS_EX_NOACTIVATE | WS_EX_NOPARENTNOTIFY;

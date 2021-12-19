@@ -119,9 +119,6 @@
     <Manifest>
       <AdditionalManifestFiles>dpi.xml</AdditionalManifestFiles>
     </Manifest>
-    <PostBuildEvent>
-      <Command>copy /y "$(TargetPath)" R:\</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -160,9 +157,6 @@
     <Manifest>
       <AdditionalManifestFiles>dpi.xml</AdditionalManifestFiles>
     </Manifest>
-    <PostBuildEvent>
-      <Command>copy /y "$(TargetPath)" R:\</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="albumPanel.c" />

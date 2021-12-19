@@ -38,15 +38,14 @@ sheet_isMyKind(const wchar_t* text) {
 	return false;
 }
 
+bool
+cue_isMyKind(const wchar_t* text);
+
+wchar_t*
+cue_blockToText(const cdt_Block* block, const cdt_Time* toc, size_t* len);
+
 wchar_t*
 eac_blockToText(const cdt_Block* block, const cdt_Time* toc, size_t* len);
-
-//bool
-//eac_isMyKind(const wchar_t* text);
-
-
-//bool
-//eac_parse(Cdt* cdt, const wchar_t* text);
 
 
 static inline int
@@ -54,7 +53,7 @@ format_getFormat(const wchar_t* text) {
 	if (!text) return format_kUnknown;
 	if (format_isIndex(text)) return format_kIndex;
 	if (sheet_isMyKind(text)) return format_kSheet;
-	//if (eac_isMyKind(text)) return format_kEac;
+	if (cue_isMyKind(text)) return format_kCue;
 	return format_kUnknown;
 }
 

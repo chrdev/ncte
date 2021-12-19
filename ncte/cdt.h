@@ -337,28 +337,11 @@ cdt_copyBlock(Cdt* cdt, int srcIndex, int dstIndex);
 BYTE
 cdt_getAlbumFields(const Cdt* cdt);
 
-static inline BYTE
-cdt_getAlbumHiddenFields(const Cdt* cdt, BYTE visibleFields) {
-	BYTE filledFields = cdt_getAlbumFields(cdt);
-	return (visibleFields ^ filledFields) & filledFields;
-}
-
 BYTE
 cdt_getTrackFields(const Cdt* cdt);
-
-static inline BYTE
-cdt_getTrackHiddenFields(const Cdt* cdt, BYTE visibleFields) {
-	BYTE filledFields = cdt_getTrackFields(cdt);
-	return (visibleFields ^ filledFields) & filledFields;
-}
-
-typedef BYTE(*cdt_getFieldsFunc)(const Cdt* cdt);
-
-typedef BYTE(*cdt_getHiddenFieldsFunc)(const Cdt* cdt, BYTE visibleFields);
 
 static inline bool
 cdt_hasAnyToc(const Cdt* cdt) {
 	const trackCount = cdt->trackLast - cdt->trackFirst + 1;
 	return cdt_tocIsValidNonZero(cdt->toc, trackCount);
 }
-

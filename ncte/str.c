@@ -74,3 +74,26 @@ resstr_loadNumber(WORD id) {
 	int result = resstr_toNumber(&str);
 	return result > 0 ? result : 0;
 }
+
+bool
+wcsbuffer_append(wchar_t** buffer, const wchar_t* text, int len) {
+	if (!text || !len) return true;
+	size_t cchIndex = wcsbuffer_getCchIndex_(*buffer);
+	size_t capacity = cchIndex - 1;
+	size_t cch = (size_t)(*buffer)[cchIndex];
+	if (len < 0) len = lstrlen(text);
+
+	if (cch + (size_t)len > capacity) {
+		size_t size = ((cch + (size_t)len) * 2 + 2) * sizeof(wchar_t);
+		void* np = HeapReAlloc(GetProcessHeap(), 0, *buffer, size);
+		if (!np) return false;
+		*buffer = np;
+		cchIndex = wcsbuffer_getCchIndex_(*buffer);
+	}
+
+	CopyMemory(*buffer + cch, text, (size_t)len * sizeof(wchar_t));
+	cch += (size_t)len;
+	(*buffer)[cch] = L'\0';
+	(*buffer)[cchIndex] = (wchar_t)cch;
+	return buffer;
+}

@@ -20,5 +20,10 @@ bit_flip8(uint8_t v, uint8_t index) {
 	return v ^ ((v ^ flip) & mask);
 }
 
+static inline uint8_t
+bit_getHidden8(uint8_t visible, uint8_t fields) {
+	return (visible ^ fields) & fields;
+}
+
 // See http://esr.ibiblio.org/?p=5095
 //#define IS_BIG_ENDIAN (*(uint16_t*)"\0\xff" < 0x100)

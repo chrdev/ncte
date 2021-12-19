@@ -468,16 +468,24 @@ onDataChanged(HWND wnd, bool showAllFields) {
 }
 
 static inline void
-handleCopyAsEac(HWND wnd) {
-	int blockIndex = msg_sendGetNav(GetDlgItem(wnd, kIdNav));
-	format_copy(wnd, theCdt.blocks + blockIndex, theCdt.toc, eac_blockToText);
+handleCopyAsCue(HWND wnd, const cdt_Block* block) {
+	format_copy(wnd, block, theCdt.toc, cue_blockToText);
 }
 
 static inline void
-onCopy(HWND wnd, int format) {
+handleCopyAsEac(HWND wnd, const cdt_Block* block) {
+	format_copy(wnd, block, theCdt.toc, eac_blockToText);
+}
+
+static inline void
+onCopy(HWND wnd, int format, int blockIndex) {
+	const cdt_Block* block = theCdt.blocks + blockIndex;
 	switch (format) {
+	case format_kCue:
+		handleCopyAsCue(wnd, block);
+		break;
 	case format_kEac:
-		handleCopyAsEac(wnd);
+		handleCopyAsEac(wnd, block);
 		break;
 	}
 }

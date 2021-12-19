@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "str.h"
 #include "cdt.h"
+#include "msg.h"
 
 
 enum {
@@ -19,11 +20,6 @@ typedef struct MSelectorParams {
 
 	int itemCount;
 	const ResStr* items;
-
-	uint8_t fields;
-	cdt_getFieldsFunc getFieldsFunc;
-	cdt_getHiddenFieldsFunc getHiddenFieldsFunc;
-	int notifyHideFieldsExtra;
 }MSelectorParams;
 
 

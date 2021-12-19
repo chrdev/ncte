@@ -113,8 +113,8 @@ BEGIN
 	MENUITEM "&Paste", kEditPaste
 	POPUP "Copy &As"
 	BEGIN
+		MENUITEM "CUE", kCopyAsCue
 		MENUITEM "EAC", kCopyAsEac
-		MENUITEM "Test", kCopyAsTest
 	END
 	MENUITEM SEPARATOR
 	MENUITEM "Move &Up", kShiftUp
